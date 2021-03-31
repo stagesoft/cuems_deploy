@@ -1,2 +1,2 @@
-rsync -rv --files-from=/opt/cuems_library/files.tmp rsync://master.local/cuems /opt/cuems_library/
+rsync -rv --files-from=/opt/cuems_library/files.tmp --log-file=/tmp/cuems_rsync.log rsync://master.local/cuems /opt/cuems_library/
 # -q to show only failed files
