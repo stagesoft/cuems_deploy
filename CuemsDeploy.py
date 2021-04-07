@@ -1,13 +1,14 @@
 from os import pipe
 import subprocess
 import sys
+import os
 
 class CuemsDeploy():
 
     def __init__(self, library_path=None, address=None, log_file=None):
         
         if not address:
-            self.address = 'rsync://master.local/cuems'
+            self.address = 'rsync://cuems_library_rsync@master.local/cuems'
         else:
             self.address = address
         
@@ -29,7 +30,7 @@ class CuemsDeploy():
     def sync(self, path):
         #rsync -rv --files-from=/opt/cuems_library/files.tmp --log-file=/tmp/cuems_rsync.log rsync://master.local/cuems /opt/cuems_library/
         try:
-            result = subprocess.run(['rsync', '-rq', '--stats', f'--files-from={path}', f'--log-file={self.log_file}', self.address, self.library_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = subprocess.run(['rsync', '-rq', '--stats', f'--files-from={path}', f'--log-file={self.log_file}', self.address, self.library_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=dict(os.environ, RSYNC_PASSWORD="f48t5eL2kLHw2Wfw"))
             result.check_returncode()
             return True
         except subprocess.CalledProcessError as e:

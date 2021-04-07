@@ -1,0 +1,10 @@
+[Unit]
+Description=Rsyncd per conection server         
+PartOf=resync.service
+
+[Socket]
+ListenStream=873
+Accept=yes
+
+[Install]
+WantedBy=sockets.target
