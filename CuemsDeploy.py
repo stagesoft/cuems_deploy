@@ -5,12 +5,17 @@ import os
 
 class CuemsDeploy():
 
-    def __init__(self, library_path=None, address=None, log_file=None):
+    def __init__(self, library_path=None, master_hostname=None, log_file=None):
         
-        if not address:
-            self.address = 'rsync://cuems_library_rsync@master.local/cuems'
+        if not master_hostname:
+            self.master_hostname = "master.local"
         else:
-            self.address = address
+            self.master_hostname
+
+        self.master_ip = self.__avahi_resolve(self.master_hostname)
+
+        self.address = f'rsync://cuems_library_rsync@{self.master_ip}/cuems'
+
         
         if not library_path:
             self.library_path = '/opt/cuems_library/'
@@ -24,6 +29,14 @@ class CuemsDeploy():
 
         self.errors = None
 
+    def __avahi_resolve(self, hostname):
+        try:
+            result = subprocess.run(['avahi-resolve-host-name', '-n', hostname], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result.check_returncode()
+            ip = result.stdout.decode(sys.getfilesystemencoding()).replace(hostname, "").strip()
+            return ip
+        except subprocess.CalledProcessError as e:
+            return False
         
 
         
