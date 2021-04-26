@@ -1,2 +1,8 @@
 rsync -rv --files-from=/opt/cuems_library/files.tmp --log-file=/tmp/cuems_rsync.log rsync://master.local/cuems /opt/cuems_library/
 # -q to show only failed files
+
+
+-----
+systemctl enable rsync.socket
+systemctl start rsync.socket
+systemctl status rsync.socket
